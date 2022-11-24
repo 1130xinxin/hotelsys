@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.etc.dao.HorderDao">
+	<resultMap type="com.etc.model.Horder" id="ho">
+		<result property="oid" column="oid"/>
+		<result property="yid" column="yid"/>
+		<result property="tid" column="tid"/>
+		<result property="start" column="start"/>
+		<result property="end" column="end"/>
+		<result property="days" column="days"/>
+		<result property="price" column="price"/>
+		<result property="total" column="total"/>
+		<result property="temp" column="temp"/>
+		<result property="tname" column="tname"/>
+	</resultMap>
+	
+ 	<insert id="insert" parameterType="horder">
+ 		insert into horder values(default,#{yid},#{tid},#{start},#{end},#{days},#{price},#{total},#{temp})
+	</insert>
+	
+ 	<update id="update" parameterType="horder">
+ 		update horder set yid=#{yid},tid=#{tid},start=#{start},end=#{end},days=#{days},price=#{price},total=#{total},temp=#{temp} 
+ 		where oid=#{oid}
+	</update>
+ 	
+	<delete id="delete" parameterType="int">
+		delete from horder where oid=#{oid}
+ 	</delete>
+ 	
+	<select id="selectOne" resultMap="ho" parameterType="int">
+		select * from horder where oid=#{oid}
+ 	</select>
+ 	
+	<select id="selectList" resultMap="ho">
+		select * from horder order by oid desc
+ 	</select>
+
+	<select id="selectListByYid" resultMap="ho">
+		SELECT o.*,t.tname FROM horder o,TYPES t WHERE o.tid=t.tid and yid=#{yid}
+ 	</select> 	
+	<select id="total" resultType="int">
+		select count(*) from horder
+ 	</select> 	
+ 	
+	<select id="selectByPage" resultMap="ho" parameterType="hashmap">		
+		select * from horder limit ${min},${max}
+ 	</select>
+ 	
+	<delete id="deleteList" >
+		delete from horder where oid in
+		<foreach item="oid" collection="array" 
+		 open="(" close=")" separator=",">
+		 #{oid}
+		</foreach>
+ 	</delete>
+ 	
+	<select id="selectByProperty" resultMap="ho" parameterType="hashmap">		
+		select * from horder where ${pname}=#{val}
+ 	</select>
+ 	
+ 	<select id="selectYuNum" parameterType="horder" resultType="int" >
+ 		select t.num-o.cnt from types t, 
+ 			(SELECT COUNT(*) cnt FROM horder
+ 			 WHERE end<![CDATA[>]]>#{start} AND start <![CDATA[<]]> #{end}
+ 			  AND tid=#{tid} ) o where t.tid=#{tid}
+ 	</select>
+ 	
+ 	<select id="selectCount1" parameterType="integer" resultType="int" >
+ 		SELECT COUNT(*)  FROM horder WHERE tid=#{tid}
+ 	</select>
+ 	
+ 	<select id="selectDing" resultMap="ho">
+		SELECT tname ,IFNULL(c,0) total,num days FROM TYPES LEFT JOIN (SELECT tid id,COUNT(*) c FROM horder WHERE
+		START<![CDATA[>=]]>'2021-01-01'  GROUP BY tid)shu
+		ON shu.id = types.tid
+ 	</select>
+ 	
+</mapper>
+

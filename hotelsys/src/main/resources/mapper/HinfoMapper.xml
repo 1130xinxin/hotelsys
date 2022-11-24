@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.etc.dao.HinfoDao">
+	<resultMap type="com.etc.model.Hinfo" id="hi">
+		<result property="hid" column="hid"/>
+		<result property="htext" column="htext"/>
+		<result property="tid" column="tid"/>
+		<result property="price" column="price"/>
+		<result property="htemp" column="htemp"/>
+	</resultMap>
+	
+ 	<insert id="insert" parameterType="hinfo">
+ 		insert into hinfo values(#{hid},#{htext},#{tid},#{price},#{htemp})
+	</insert>
+	
+ 	<update id="update" parameterType="hinfo">
+ 		update hinfo set htext=#{htext},tid=#{tid},price=#{price},htemp=#{htemp} 
+ 		where hid=#{hid}
+	</update>
+ 	
+ 	<update id="updateNum" parameterType="hinfo">
+ 		update hinfo set htext=#{htext},tid=#{tid},price=#{price},htemp=#{htemp} 
+ 		where hid=#{hid}
+	</update>
+	
+	<delete id="delete" parameterType="int">
+		delete from hinfo where hid=#{hid}
+ 	</delete>
+ 	
+	<select id="selectOne" resultMap="hi" parameterType="int">
+		select * from hinfo where hid=#{hid}
+ 	</select>
+ 	
+	<select id="selectList" resultMap="hi">
+		select * from hinfo
+ 	</select>
+ 	
+	<select id="total" resultType="int">
+		select count(*) from hinfo
+ 	</select> 	
+ 	
+	<select id="selectByPage" resultMap="hi" parameterType="hashmap">		
+		select * from hinfo limit ${min},${max}
+ 	</select>
+ 	
+	<delete id="deleteList" >
+		delete from hinfo where hid in
+		<foreach item="hid" collection="array" 
+		 open="(" close=")" separator=",">
+		 #{hid}
+		</foreach>
+ 	</delete>
+ 	
+	<select id="selectByProperty" resultMap="hi" parameterType="hashmap">		
+		select * from hinfo where ${pname}=#{val}
+ 	</select>
+
+	<select id="selectTid" resultMap="hi" parameterType="integer">
+		SELECT * FROM hinfo WHERE tid=#{tid}
+ 	</select>
+ 	
+</mapper>
+

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="js/login.css">
+</head>
+<body>
+    <!--登陆主体开始-->
+    <div id="main">
+        <!-- 头像区开始-->
+        <div id="header-border">
+            <!-- 头像区内部开始-->
+            <div id="header-pic">
+
+            </div>
+            <!-- 头像区内部结束-->
+        </div>
+        <!-- 头像区结束-->
+        <!-- 账号密码区开始-->
+        <div id="account">
+            <form action="">
+                <div class="input">
+                    <input type="text" id="loginid" v-model="admin.loginid" placeholder="请输入账号"/>
+                </div>
+                <div class="input">
+                    <input type="password" id="loginpwd" v-model="admin.loginpwd" placeholder="请输入密码"/>
+                </div>
+            </form>
+        </div>
+        <!-- 账号密码区结束-->
+        <!-- 登陆按钮开始-->
+        <button id="login-btn" @click="login">登录</button>
+        <!-- 登陆按钮结束-->
+        <!-- 登陆区底部开始-->
+        <div id="footer">
+            <a href="#">忘记密码?</a>
+        </div>
+        <!-- 登陆区底部结束-->
+    </div>
+    <!--登陆主体结束-->
+    
+    <!--引入jquery-->
+    <script src="js/jquery.js"></script>
+    <!-- 引入全局公共js文件 -->
+    <script type="text/javascript" src="js/global.js"></script>
+    <!-- 引入layer弹出层js功能 -->
+	<script type="text/javascript" src="js/vue.min.js"></script>
+	<script type="text/javascript" src="js/axios.min.js"></script>
+    <script type="text/javascript" src="js/layer/layer.js"></script>
+	<script src="js/base.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript">
+    	var vm = new Vue({
+    		el:"#main",
+    		data:{
+    			admin:{}
+    		},
+    		methods:{
+    			login: function() {
+					axios.post("admin/selectLogin", this.admin).then((res)=>{
+						if(res.data){
+							sessionStorage.setItem('admin',JSON.stringify(res.data));
+							location = "index.html";
+						}else{
+							layer.msg('账号密码错误');
+						}
+					})
+				}
+    		}
+    	})
+    	
+        $(document).ready(function() {
+
+            // 判断是否有头像数据
+            if (localStorage.getItem('empPic')) {
+                $('#header-pic').css('background','url(' + localStorage.getItem('empPic') + ')');
+            }
+            
+            
+
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+	#picture{
+				width: 1332px;
+				height: 480px;
+				background: #999;
+				margin:0 auto;
+				position: relative;
+			}
+			#picture img{
+				position: absolute;
+				left: 10px;
+				top:10px;
+				opacity: 0;
+			}
+			#picture div{
+				width: 800px;
+				height: 10px;
+				position: absolute;
+				left: 120px;
+				top:250px;
+			}
+			#picture div table{
+				width: 20px;
+				height: 10px;
+				background: #CCC;
+				float: left;
+				margin-right: 5px;
+				outline: none;
+			}

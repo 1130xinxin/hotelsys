@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.etc.dao.GonggaoDao">
+	<resultMap type="com.etc.model.Gonggao" id="go">
+		<result property="gid" column="gid"/>
+		<result property="title" column="title"/>
+		<result property="gtext" column="gtext"/>
+		<result property="ctime" column="ctime"/>
+	</resultMap>
+	
+ 	<insert id="insert" parameterType="gonggao">
+ 		insert into gonggao values(default,#{title},#{gtext},#{ctime})
+	</insert>
+	
+ 	<update id="update" parameterType="gonggao">
+ 		update gonggao set title=#{title},gtext=#{gtext},ctime=#{ctime} 
+ 		where gid=#{gid}
+	</update>
+ 	
+	<delete id="delete" parameterType="int">
+		delete from gonggao where gid=#{gid}
+ 	</delete>
+ 	
+	<select id="selectOne" resultMap="go" parameterType="int">
+		select * from gonggao where gid=#{gid}
+ 	</select>
+ 	
+	<select id="selectList" resultMap="go">
+		select * from gonggao order by gid desc
+ 	</select>
+ 	
+	<select id="total" resultType="int">
+		select count(*) from gonggao
+ 	</select> 	
+ 	
+	<select id="selectByPage" resultMap="go" parameterType="hashmap">		
+		select * from gonggao limit ${min},${max}
+ 	</select>
+ 	
+	<delete id="deleteList" >
+		delete from gonggao where gid in
+		<foreach item="gid" collection="array" 
+		 open="(" close=")" separator=",">
+		 #{gid}
+		</foreach>
+ 	</delete>
+ 	
+	<select id="selectByProperty" resultMap="go" parameterType="hashmap">		
+		select * from gonggao where ${pname}=#{val}
+ 	</select>
+ 	
+</mapper>
+

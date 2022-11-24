@@ -1,0 +1,41 @@
+#con{
+	width: 800px;
+}
+#ord{
+	clear: both;
+	margin:0px;
+	list-style: none;
+	margin-left:5px
+}
+
+#ord li{
+	float:left;
+	margin: 5px;
+	padding: 5px;
+	text-align: left;
+	/*background: gray;*/
+	font-size: 16px;
+	font-weight:700;
+	width: 80px;
+}
+#ord .w{
+	width: 130px;
+}
+.dd{
+	width: 700px;
+	clear: both;
+	margin-top: 18px;
+	border-bottom: 1px dotted gray;
+	margin-left:20px;
+}
+.dd img{
+	vertical-align: middle;
+}
+.dd span{
+	display: inline-block;
+	height: 40px;
+	line-height: 40px;
+	text-align: center;
+	margin: 12px;
+	font-size: 16px
+}

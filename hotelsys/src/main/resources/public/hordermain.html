@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>horder here</title>
+<link rel="stylesheet" href="js/bootstrap/css/bootstrap.css" />
+<style type="text/css">
+.pagination {
+	margin: 0!important;
+}
+#addform{
+	position: absolute;width: 300px;height: 255px;
+	opacity: 0.8;filter: alpha(opacity=80);
+	background-color: #eee;padding:0 20px
+}
+</style>
+</head>
+<body>
+<div id="app" class="container">
+	<ol class="breadcrumb">
+		<li><a href="#">酒店预订管理系统</a></li>
+		<li><a href="#">订单管理</a></li>
+		<li><a href="#">{{action}}</a></li>
+	</ol>
+<div v-show="show">
+	<h2 class="page-header">订单展示</h2>
+	<form class="form-inline" role="form">
+		<button type="button" @click="deleteList" class="btn btn-danger">删除</button>
+	</form>
+	<hr>
+	<table class="table table-bordered table-striped">
+	<thead>
+		<tr>
+			<td align="center"><input type="checkbox" id="ck" name="ck" @click="allchecked()" v-model="checked" /></td>
+			<th>编号</th>
+			<th>用户</th>
+			<th>类型</th>
+			<th>开始日期</th>
+			<th>结束日期</th>
+			<th>天数</th>
+			<th>价格</th>
+			<th>总价</th>
+			<th>状态</th>
+			<th>操作</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr v-for="(temp,i) in list">
+			<td align="center"><input type="checkbox" id="dk" name="dk" :value="temp.oid" v-model="oids" /></td>
+			<td>{{temp.oid}}</td>
+			<td>{{temp.yid}}</td>
+			<td>{{temp.tid}}</td>
+			<td>{{temp.start}}</td>
+			<td>{{temp.end}}</td>
+			<td>{{temp.days}}</td>
+			<td>{{temp.price}}</td>
+			<td>{{temp.total}}</td>
+			<td>{{temp.temp}}</td>
+			<td><a href="javascript:;" @click="toupdate(i, show=false, url='update', action='修改')" class="btn btn-primary btn-sm update-btn">修改</a>
+				<a href="javascript:;" @click="deletehorder(i)" class="btn btn-danger btn-sm del-btn" data-id="6">删除</a>
+			</td>
+		</tr>
+	</tbody>
+	</table>
+	<div class="row">
+		<div class="col-sm-4">
+			<div id="pagerInfo">
+				共{{total }}条数据，{{curpage }}/{{totalpage }}页，
+				<select id="line" name="line" v-model="line">
+					<option v-for="l in pagelist" :value="l">{{l}}</option>
+				</select>行
+			</div>
+		</div>
+		<div class="col-sm-8">
+			<nav id="pagerNav">
+	        	<ul class="pagination pagination-sm pull-right">
+	        		<li><a href="javascript:void(0);" @click="curpage=1" id="firstBtn">首页</a></li>		
+	        		<li><a href="javascript:void(0);" @click="curpage=(curpage<=1)?1:curpage-1" id="prevBtn">上页</a></li> 		        		
+	        		<li><a href="javascript:void(0);" @click="curpage=(curpage>=totalpage)?totalpage:curpage+1" id="nextBtn">下页</a></li>               
+	        		<li><a href="javascript:void(0);" @click="curpage=totalpage" id="lastBtn">末页</a></li>
+	        	</ul>
+	        </nav>
+		</div>
+	</div>
+	
+</div>
+<div v-show="!show">
+	<h2 class="page-header">订单{{action}}</h2>
+	<form id="form1" class="form-horizontal">
+	<div class="form-group">
+		<label for="" class="col-xs-2">编号</label>
+		<div class="col-xs-10">
+			<input type="text" id="oid" name="oid" v-model="horder.oid" class="form-control"/>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="" class="col-xs-2">用户</label>
+		<div class="col-xs-9">
+			<select name="yid" id="yid" v-model="horder.yid" class="form-control">
+				<option v-for="yonghu in yonghuList" :value="yonghu.yid">{{yonghu.name}}</option>
+			</select>
+		</div>
+		<div class="col-xs-1">
+			<span>
+				<img src="js/edit_add.png" @click="showadd(event, refObj=refList.Yonghu)">
+			</span>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="" class="col-xs-2">类型</label>
+		<div class="col-xs-9">
+			<select name="tid" id="tid" v-model="horder.tid" class="form-control">
+				<option v-for="types in typesList" :value="types.tid">{{types.tname}}</option>
+			</select>
+		</div>
+		<div class="col-xs-1">
+			<span>
+				<img src="js/edit_add.png" @click="showadd(event, refObj=refList.Types)">
+			</span>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="" class="col-xs-2">开始日期</label>
+		<div class="col-xs-10">
+			<input type="text" id="start" name="start" v-model="horder.start" class="form-control"/>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="" class="col-xs-2">结束日期</label>
+		<div class="col-xs-10">
+			<input type="text" id="end" name="end" v-model="horder.end" class="form-control"/>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="" class="col-xs-2">天数</label>
+		<div class="col-xs-10">
+			<input type="text" id="days" name="days" v-model="horder.days" class="form-control"/>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="" class="col-xs-2">价格</label>
+		<div class="col-xs-10">
+			<input type="text" id="price" name="price" v-model="horder.price" class="form-control"/>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="" class="col-xs-2">总价</label>
+		<div class="col-xs-10">
+			<input type="text" id="total" name="total" v-model="horder.total" class="form-control"/>
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="" class="col-xs-2">状态</label>
+		<div class="col-xs-10">
+			<input type="text" id="temp" name="temp" v-model="horder.temp" class="form-control"/>
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-sm-10 col-sm-offset-2">
+			<input type="button"  :value="action" class="btn btn-success" id="addBtn" @click="modify"/>
+			<input type="button"  value="取消" class="btn btn-muted" @click="show=true, url='list', action='数据列表'"/>
+		</div>
+	</div>
+	</form>
+</div>
+<div id="addform" :style="{left: x+'px', top: y+'px'}" v-show="fk">	
+	<h3 class="page-header">{{refObj.desc}}录入</h3>
+	<form id="form1" class="form-horizontal">
+	<div class="form-group">
+		<label for="" class="col-sm-2">{{refObj.id}}</label>
+		<div class="col-sm-10">
+			<input type="text" id="txid" name="txid" v-model="refObj.idv" class="form-control"/>
+		</div>					
+	</div>	
+	<div class="form-group">
+		<label for="" class="col-sm-2">{{refObj.name}}</label>
+		<div class="col-sm-10">
+			<input type="text" id="txname" name="txname" v-model="refObj.namev" class="form-control"/>
+		</div>					
+	</div>
+	<div class="form-group">					
+		<div class="col-sm-10 col-sm-offset-2">
+			<input type="button" @click="saverefinfo" value="保存" class="btn btn-success" id="addBtn"/>
+			<input type="button" @click="fk=false" value="关闭" class="btn btn-danger"/>
+		</div>
+	</div>
+	</form>
+</div>
+</div>
+<script type="text/javascript" src="js/vue.min.js"></script>
+<script type="text/javascript" src="js/axios.min.js"></script>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/layer/layer.js"></script>
+<script src="js/base.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+var vm = new Vue({
+	el: "#app",
+	data: {
+		show: true,
+		msg: '',
+		url: 'list',
+		action: '数据列表',
+		horder: {},
+		list: [],
+		checked : false,
+		oids : [],
+		curpage : 1,
+		total : 0,
+		pagelist: [3,4,5],
+		line: 3,
+		fk: false,
+		x: 0,
+		y: 0,
+		refObj: {},
+		refList: {
+			Yonghu: {obj: 'yonghu', id: 'yid', name: 'name', url: 'yonghu/insert', refid: 'yid', desc: '用户'},
+			Types: {obj: 'types', id: 'tid', name: 'tname', url: 'types/insert', refid: 'tid', desc: '房间类型'},
+		},
+		yonghuList: [],
+		typesList: [],
+	},
+	created: function() {
+		axios.post("horder/selectTotal").then(res=>{
+			this.total = res.data;
+		})
+		this.selectByPage(true);
+		axios.post("yonghu/selectList").then(res=>{
+			this.yonghuList = res.data;
+		})
+		axios.post("types/selectList").then(res=>{
+			this.typesList = res.data;
+		})
+	},
+	computed: {
+		totalpage: function() {
+			return parseInt((this.line-1+this.total)/this.line);
+		},
+		param: function() {
+			return "page="+this.curpage+"&line="+this.line;
+		}
+	},
+	watch: {
+		curpage: function(newCurpage) {
+			this.selectByPage();
+		},
+		line: function(newLine) {
+			if(this.curpage>this.totalpage){
+				this.curpage = this.totalpage;
+			}else{
+				this.selectByPage();
+			}
+		},
+		total: function(newTotal) {
+			if(this.curpage>this.totalpage && this.totalpage!=0){
+				this.curpage = this.totalpage;
+			}else{
+				this.selectByPage();
+			}
+		}
+	},
+	methods: {
+		selectList: function() {
+			this.curpage = 1;
+		},
+		selectByPage: function(first) {
+			if(this.total==0){
+				this.list = [];
+				return;
+			}
+			axios.post("horder/selectByPage?"+this.param).then(res=>{
+				this.list = res.data;
+				this.allchecked();
+			});
+		},
+		deletehorder: function(i) {
+			layer.confirm('确定要删除此订单吗？', {
+			    btn: ['确定','取消']
+			}, ()=>{
+				layer.closeAll();
+				axios.post("horder/delete?oid="+this.list[i].oid).then(res=>{
+					if(res.data=="1"){
+						this.msg = "操作成功！";
+						this.list.splice(i, 1);
+						this.total -= 1;
+					}else{
+						this.msg = "操作失败！";
+					}
+					layer.msg(this.msg);
+				})
+			});
+		},
+		allchecked: function() {
+			this.oids = [];
+			if(this.checked){
+				for (var i = 0; i < this.list.length; i++) {
+					this.oids.push(this.list[i].oid);
+				}
+			}
+		},
+		toinsert: function() {
+			this.horder = {};
+		},
+		modify: function() {
+			axios.post("horder/"+this.url, this.horder).then(res=>{
+				if(res.data=="1"){
+					this.msg = "操作成功！";
+					if(this.url.lastIndexOf("insert")>=0){
+						this.total += 1;
+						this.horder = {};
+					}else{
+						this.selectByPage();
+					}
+				}else{
+					this.msg = "操作失败！";
+				}
+				layer.msg(this.msg);
+			})
+		},
+		toupdate: function(i) {
+			this.horder = this.list[i];
+		},
+		deleteList: function() {
+			if(this.oids.length==0){
+				this.msg = "必须选中一行！";
+				layer.msg(this.msg);
+				return;
+			}
+			layer.confirm('确定要删除已选订单吗？', {
+			    btn: ['确定','取消']
+			}, ()=>{
+				layer.closeAll();
+				axios.post("horder/deleteList/"+this.oids).then(res=>{
+					if(res.data=="1"){
+						this.msg = "操作成功！";
+						this.total -= this.oids.length;
+					}else{
+						this.msg = "操作失败！";
+					}
+					layer.msg(this.msg);
+				})
+			});
+		},
+		showadd: function(event) {
+			this.fk = true;
+			this.refObj.idv = "";
+			this.refObj.namev = "";
+			this.x = pageX(event.target) - 325;
+			this.y = pageY(event.target) - 80;
+		},
+		saverefinfo: function () {
+			var param = {};
+			param[this.refObj.id] = this.refObj.idv;
+			param[this.refObj.name] = this.refObj.namev;
+			axios.post(this.refObj.url, param).then(res=>{
+				if(res.data=="1"){
+					this[this.refObj.obj+"List"].push(param);
+					this.horder[this.refObj.refid] = this.refObj.idv;
+				}else{
+					this.msg = "操作失败！";
+					layer.msg(this.msg);
+				}
+			});
+		}
+	}
+})
+
+function pageX(elem){
+    return elem.offsetParent?(elem.offsetLeft+pageX(elem.offsetParent)):elem.offsetLeft;
+}
+function pageY(elem){
+    return elem.offsetParent?(elem.offsetTop+pageY(elem.offsetParent)):elem.offsetTop;
+}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.etc.dao.YonghuDao">
+	<resultMap type="com.etc.model.Yonghu" id="yo">
+		<result property="yid" column="yid"/>
+		<result property="name" column="name"/>
+		<result property="pwd" column="pwd"/>
+		<result property="tel" column="tel"/>
+		<result property="email" column="email"/>
+		<result property="idcard" column="idcard"/>
+	</resultMap>
+	
+ 	<insert id="insert" parameterType="yonghu">
+ 		insert into yonghu values(#{yid},#{name},#{pwd},#{tel},#{email},#{idcard})
+	</insert>
+	
+ 	<update id="update" parameterType="yonghu">
+ 		update yonghu set name=#{name},pwd=#{pwd},tel=#{tel},email=#{email},idcard=#{idcard} 
+ 		where yid=#{yid}
+	</update>
+ 	
+	<delete id="delete" parameterType="string">
+		delete from yonghu where yid=#{yid}
+ 	</delete>
+ 	
+	<select id="selectOne" resultMap="yo" parameterType="string">
+		select * from yonghu where yid=#{yid}
+ 	</select>
+ 	
+	<select id="selectList" resultMap="yo">
+		select * from yonghu
+ 	</select>
+ 	
+	<select id="total" resultType="int">
+		select count(*) from yonghu
+ 	</select> 	
+ 	
+	<select id="selectByPage" resultMap="yo" parameterType="hashmap">		
+		select * from yonghu limit ${min},${max}
+ 	</select>
+ 	
+	<delete id="deleteList" >
+		delete from yonghu where yid in
+		<foreach item="yid" collection="array" 
+		 open="(" close=")" separator=",">
+		 #{yid}
+		</foreach>
+ 	</delete>
+ 	
+	<select id="selectByProperty" resultMap="yo" parameterType="hashmap">		
+		select * from yonghu where ${pname}=#{val}
+ 	</select>
+ 	
+</mapper>
+

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.etc.dao.RuzhuDao">
+	<resultMap type="com.etc.model.Ruzhu" id="ru">
+		<result property="rid" column="rid"/>
+		<result property="oid" column="oid"/>
+		<result property="hid" column="hid"/>
+		<result property="uname" column="uname"/>
+		<result property="tel" column="tel"/>
+		<result property="start" column="start"/>
+		<result property="end" column="end"/>
+		<result property="yajin" column="yajin"/>
+		<result property="yufu" column="yufu"/>
+		<result property="total" column="total"/>
+		<result property="rtemp" column="rtemp"/>
+	</resultMap>
+	
+ 	<insert id="insert" parameterType="ruzhu">
+ 		insert into ruzhu values(#{rid},#{oid},#{hid},#{uname},#{tel},#{start},#{end},#{yajin},#{yufu},#{total},#{rtemp})
+	</insert>
+	
+ 	<update id="update" parameterType="ruzhu">
+ 		update ruzhu set oid=#{oid},hid=#{hid},uname=#{uname},tel=#{tel},start=#{start},end=#{end},yajin=#{yajin},yufu=#{yufu},total=#{total},rtemp=#{rtemp} 
+ 		where rid=#{rid}
+	</update>
+ 	
+	<delete id="delete" parameterType="int">
+		delete from ruzhu where rid=#{rid}
+ 	</delete>
+ 	
+	<select id="selectOne" resultMap="ru" parameterType="int">
+		select * from ruzhu where rid=#{rid}
+ 	</select>
+ 	
+	<select id="selectList" resultMap="ru">
+		select * from ruzhu
+ 	</select>
+ 	
+	<select id="total" resultType="int">
+		select count(*) from ruzhu
+ 	</select> 	
+ 	
+	<select id="selectByPage" resultMap="ru" parameterType="hashmap">		
+		select * from ruzhu limit ${min},${max}
+ 	</select>
+ 	
+	<delete id="deleteList" >
+		delete from ruzhu where rid in
+		<foreach item="rid" collection="array" 
+		 open="(" close=")" separator=",">
+		 #{rid}
+		</foreach>
+ 	</delete>
+ 	
+	<select id="selectByProperty" resultMap="ru" parameterType="hashmap">		
+		select * from ruzhu where ${pname}=#{val}
+ 	</select>
+ 	
+</mapper>
+

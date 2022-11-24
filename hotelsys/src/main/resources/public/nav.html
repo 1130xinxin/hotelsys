@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+	<link rel="stylesheet" href="js/bootstrap/css/bootstrap.css" />
+	<title>nav</title>
+	<style type="text/css">
+		* {
+			margin: 0;
+			padding: 0;
+		}		
+		body {
+			background: #333333;
+		}
+		/*头像区*/
+		.touxiang {
+			width: 150px;
+			height: 150px;
+			margin: 20px auto;
+			border-radius: 50%;
+			border:5px solid #ffffff;
+			overflow: hidden;
+		}		
+		.touxiang img {
+			width: 100%;
+			display: block;			
+		}		
+		/*左侧导航链接*/
+		.nav-left .list-group-item {
+			background: transparent;
+			border: none;
+			border-radius: 0!important;
+			line-height: 35px;
+			text-align: center;
+			color: #eeeeee;
+			font-size: 16px;
+			letter-spacing: 1px;
+			border-bottom: 1px solid #444444;
+		}
+	</style>
+</head>
+<body>
+	<div class="container-fluid">		
+		<!-- 头像区 -->
+		<div class="row touxiang">
+			<img id="empPic" src="js/liudehua.jpg" alt="头像" class="img-responsive">
+		</div>	
+		<p class="text-center" style="color:#eeeeee">欢迎你</p>		
+		<!-- 左侧导航链接 -->
+		<div class="row nav-left">
+			<div class="list-group">
+				<a href="adminmain.html" target="main" class="list-group-item">管理员管理</a>
+				<a href="yonghumain.html" target="main" class="list-group-item">用户管理</a>
+				<a href="gonggaomain.html" target="main" class="list-group-item">公告管理</a>
+				<a href="typesmain.html" target="main" class="list-group-item">房间类型管理</a>
+				<a href="hinfomain.html" target="main" class="list-group-item">房间管理</a>
+				<a href="hordermain.html" target="main" class="list-group-item">订单管理</a>
+				<a href="ruzhumain.html" target="main" class="list-group-item">入住信息管理</a>
+				<a href="main.html" target="main" class="list-group-item">订单统计</a>
+				<a href="login.html" target="_top" class="list-group-item">退出登录</a>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

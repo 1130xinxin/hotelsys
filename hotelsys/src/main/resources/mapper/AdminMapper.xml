@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.etc.dao.AdminDao">
+	<resultMap type="com.etc.model.Admin" id="ad">
+		<result property="loginid" column="loginid"/>
+		<result property="name" column="name"/>
+		<result property="loginpwd" column="loginpwd"/>
+		<result property="tel" column="tel"/>
+		<result property="role" column="role"/>
+	</resultMap>
+	
+ 	<insert id="insert" parameterType="admin">
+ 		insert into admin values(#{loginid},#{name},#{loginpwd},#{tel},#{role})
+	</insert>
+	
+ 	<update id="update" parameterType="admin">
+ 		update admin set name=#{name},loginpwd=#{loginpwd},tel=#{tel},role=#{role} 
+ 		where loginid=#{loginid}
+	</update>
+ 	
+	<delete id="delete" parameterType="string">
+		delete from admin where loginid=#{loginid}
+ 	</delete>
+ 	
+	<select id="selectOne" resultMap="ad" parameterType="string">
+		select * from admin where loginid=#{loginid}
+ 	</select>
+ 	
+	<select id="selectList" resultMap="ad">
+		select * from admin
+ 	</select>
+ 	
+	<select id="total" resultType="int">
+		select count(*) from admin
+ 	</select> 	
+ 	
+	<select id="selectByPage" resultMap="ad" parameterType="hashmap">		
+		select * from admin limit ${min},${max}
+ 	</select>
+ 	
+	<delete id="deleteList" >
+		delete from admin where loginid in
+		<foreach item="loginid" collection="array" 
+		 open="(" close=")" separator=",">
+		 #{loginid}
+		</foreach>
+ 	</delete>
+ 	
+	<select id="selectByProperty" resultMap="ad" parameterType="hashmap">		
+		select * from admin where ${pname}=#{val}
+ 	</select>
+ 	
+</mapper>
+
